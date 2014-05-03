@@ -151,8 +151,15 @@ cec_vendor_id CExynosCECAdapterCommunication::GetVendorId(void)
 
 
 uint16_t CExynosCECAdapterCommunication::GetPhysicalAddress(void)
-{  
-  return 0x1000;
+{
+  char* addr_string = getenv("CEC_HDMI_PORT");
+  if (addr_string == NULL)
+    return CEC_DEFAULT_PHYSICAL_ADDRESS;
+  int addr_int = atoi(addr_string);
+  if (addr_int == 0)
+    return CEC_DEFAULT_PHYSICAL_ADDRESS;
+
+  return 0x1000 * addr_int;
 }
 
 
