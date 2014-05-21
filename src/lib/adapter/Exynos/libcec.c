@@ -30,7 +30,7 @@
 #define ALOGI(args...) printf(args);
 
 
-#define CEC_DEBUG 1
+//#define CEC_DEBUG 1
 
 /**
  * @def CEC_DEVICE_NAME

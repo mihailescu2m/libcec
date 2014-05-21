@@ -130,9 +130,13 @@ cec_adapter_message_state CExynosCECAdapterCommunication::Write(
     size += data.parameters.size;
   }
     
-
-  if (CECSendMessage(buffer, size) != size)
-    LIB_CEC->AddLog(CEC_LOG_ERROR, "%s: write failed !", __func__);
+  uint32_t ret = CECSendMessage(buffer, size);
+  if (ret != size) {
+    LIB_CEC->AddLog(CEC_LOG_ERROR, "%s: write failed ret = %08x !", __func__, ret);
+  }
+  else {
+    rc = ADAPTER_MESSAGE_STATE_SENT_ACKED;
+  }
 
   return rc;
 }
@@ -216,7 +220,7 @@ void *CExynosCECAdapterCommunication::Process(void)
 
         cec_command::Format(
           cmd, initiator, destination,
-          ( size > 3 ) ? cec_opcode(buffer[1]) : CEC_OPCODE_NONE);
+          ( size > 1 ) ? cec_opcode(buffer[1]) : CEC_OPCODE_NONE);
 
         for( uint8_t i = 2; i < size; i++ )
           cmd.parameters.PushBack(buffer[i]);
